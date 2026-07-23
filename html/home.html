@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <script type="module" src="../js/main.js" defer></script>
+    <script type="module" src="../js/firebase_config.js" defer></script>
+    <script type="module" src="../js/data_access.js" defer></script>
+    <script type="module" src="../js/auth_guard.js" defer></script>
+    <script type="module" src="../js/spotify_access.js" defer></script>
+    <title>Album collection</title>
+</head>
+
+<body id="home">
+    <nav>
+        <a href="../html/home.html"><h1>Collection</h1></a>
+        <input id="album_input" type="text" placeholder="Searched album" maxlength="50"></input>
+        <button id="log_out"><img src="../img/log_out.png" alt="log out" width="32px"></button>
+    </nav>
+    
+    <div id="album_list"></div>
+</body>
+
+</html>
