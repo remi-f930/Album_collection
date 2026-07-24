@@ -35,7 +35,7 @@ export async function getTitles(albumId) {
         const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/album/${albumId}/tracks`);
         const data = await response.json();
         if (!response.ok) {
-            if(response.status == 429) {
+            if (response.status == 429) {
                 const title_list = document.querySelector(`#title_list_${album.id}`);
                 title_list.textContent = `Error 429, retry in ${data.retryAfter} seconds`
             }
@@ -122,12 +122,13 @@ function showTitles(titles, albumId) {
 }
 
 let timeoutId;
-
-album_input.addEventListener("keyup", () => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(async () => {
-        const album = album_input.value;
-        const albums = await getAlbum(album);
-        showAlbums(albums);
-    }, 400);
-});
+if (album_input) {
+    album_input.addEventListener("keyup", () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(async () => {
+            const album = album_input.value;
+            const albums = await getAlbum(album);
+            showAlbums(albums);
+        }, 400);
+    });
+}
