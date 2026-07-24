@@ -546,6 +546,18 @@ dialog:open {
     transform: scale(0.97);
 }
 
+#reset_password {
+    color: #f7c548;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: small;
+    justify-self: center;
+    margin-top: 4px;
+}
+
+#reset_password:hover {
+    color: #ff6b35;
+}
+
 @media screen and (max-width: 600px) {
     .collection_row {
         grid-template-columns: 48px 1fr;
