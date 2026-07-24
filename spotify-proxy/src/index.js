@@ -2,6 +2,7 @@ let cachedToken = null;
 let tokenExpiry = 0;
 
 async function getSpotifyToken(clientId, clientSecret) {
+    // Réutilise le token tant qu'il est valide, évite un appel inutile à Spotify
     if (cachedToken && Date.now() < tokenExpiry) {
         return cachedToken;
     }
@@ -21,7 +22,7 @@ async function getSpotifyToken(clientId, clientSecret) {
 
     const data = await res.json();
     cachedToken = data.access_token;
-    tokenExpiry = Date.now() + (data.expires_in * 1000) - 5000;
+    tokenExpiry = Date.now() + (data.expires_in * 1000) - 5000; // marge de sécurité de 5s
     return cachedToken;
 }
 
@@ -37,8 +38,37 @@ function jsonResponse(body, status = 200) {
     });
 }
 
+async function appelerSpotify(url, token) {
+    const spotifyRes = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+
+    // Vérifie le 429 en priorité, avant tout autre traitement
+    if (spotifyRes.status === 429) {
+        const retryAfterHeader = spotifyRes.headers.get("Retry-After");
+        console.log("Retry-After brut reçu de Spotify :", retryAfterHeader);
+        return jsonResponse(
+            {
+                error: "rate_limited",
+                retryAfter: retryAfterHeader ? parseInt(retryAfterHeader) : null,
+                message: retryAfterHeader
+                    ? `Trop de requêtes, réessaie dans ${retryAfterHeader}s`
+                    : "Trop de requêtes, réessaie plus tard (délai inconnu)"
+            },
+            429
+        );
+    }
+
+    if (!spotifyRes.ok) {
+        const errorData = await spotifyRes.json().catch(() => ({}));
+        return jsonResponse({ error: errorData?.error?.message || "Erreur Spotify" }, spotifyRes.status);
+    }
+
+    const data = await spotifyRes.json();
+    return jsonResponse(data);
+}
+
 export default {
     async fetch(request, env) {
+        // Gère les requêtes préliminaires CORS (préflight)
         if (request.method === "OPTIONS") {
             return jsonResponse({}, 204);
         }
@@ -48,25 +78,17 @@ export default {
         try {
             const token = await getSpotifyToken(env.SPOTIFY_CLIENT_ID, env.SPOTIFY_CLIENT_SECRET);
 
-            // Nouvelle route : /album/{id}/tracks
+            // Route : /album/{id}/tracks — récupère les pistes d'un album
             const albumMatch = url.pathname.match(/^\/album\/([a-zA-Z0-9]+)\/tracks$/);
             if (albumMatch) {
                 const albumId = albumMatch[1];
-                const spotifyRes = await fetch(
+                return await appelerSpotify(
                     `https://api.spotify.com/v1/albums/${albumId}/tracks?limit=50`,
-                    { headers: { Authorization: `Bearer ${token}` } }
+                    token
                 );
-
-                if (!spotifyRes.ok) {
-                    const errorData = await spotifyRes.json().catch(() => ({}));
-                    return jsonResponse({ error: errorData?.error?.message || "Erreur Spotify" }, spotifyRes.status);
-                }
-
-                const data = await spotifyRes.json();
-                return jsonResponse(data);
             }
 
-            // Route existante : recherche d'albums
+            // Route par défaut : recherche d'albums
             const query = url.searchParams.get("q");
             const offset = url.searchParams.get("offset") || "0";
 
@@ -74,28 +96,17 @@ export default {
                 return jsonResponse({ error: "Paramètre 'q' manquant" }, 400);
             }
 
-            const spotifyRes = await fetch(
+            if (query.length > 100) {
+                return jsonResponse({ error: "Requête trop longue" }, 400);
+            }
+
+            return await appelerSpotify(
                 `https://api.spotify.com/v1/search?q=${encodeURIComponent(query)}&type=album&limit=10&offset=${offset}`,
-                { headers: { Authorization: `Bearer ${token}` } }
+                token
             );
 
-            if (spotifyRes.status === 429) {
-                const retryAfter = spotifyRes.headers.get("Retry-After");
-                return jsonResponse(
-                    { error: "rate_limited", retryAfter: retryAfter ? parseInt(retryAfter) : null },
-                    429
-                );
-            }
-
-            if (!spotifyRes.ok) {
-                const errorData = await spotifyRes.json().catch(() => ({}));
-                return jsonResponse({ error: errorData?.error?.message || "Erreur Spotify" }, spotifyRes.status);
-            }
-
-            const data = await spotifyRes.json();
-            return jsonResponse(data);
-
         } catch (err) {
+            console.error(err);
             return jsonResponse({ error: "Erreur interne du proxy" }, 500);
         }
     }
