@@ -2,8 +2,6 @@ import { getFirestore, collection, addDoc, getDocs, setDoc, doc, getDoc, deleteD
 import { auth, db } from "./firebase_config.js";
 import { getTitles, formatDuration } from "./spotify_access.js";
 
-const cd_button = document.querySelectorAll(".cd");
-
 export async function addAlbum(album, type) {
     const status = await checkAlbum(album.id);
     if (type == 0) {
@@ -13,7 +11,7 @@ export async function addAlbum(album, type) {
         type = "vinyl";
     }
     const user = auth.currentUser;
-    if (!user) {
+    if (!user || !user.emailVerified) {
         window.location.href = "../index.html"
         return;
     }

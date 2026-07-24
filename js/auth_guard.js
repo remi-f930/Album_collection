@@ -7,7 +7,7 @@ const log_out = document.querySelector("#log_out");
 
 export function guardPage() {
     onAuthStateChanged(auth, (user) => {
-        if (!user) {
+        if (!user || !user.emailVerified) {
             window.location.href = "../index.html";
         } else {
             if (home) {

@@ -1,5 +1,5 @@
 import { auth } from "./firebase_config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
 const status_message = document.querySelector("#status_message");
 const login_button = document.querySelector("#login_button");
@@ -20,8 +20,9 @@ async function login(email, password) {
 async function register(email, password) {
     try {
         await createUserWithEmailAndPassword(auth, email, password);
+        await sendEmailVerification(auth.currentUser);
         status_message.style.color = "green";
-        status_message.textContent = "Account created";
+        status_message.textContent = `Account created, verification mail sent to ${email}`;
     } catch (err) {
         status_message.style.color = "red";
         status_message.textContent = err.code;
