@@ -1,9 +1,10 @@
 import { auth } from "./firebase_config.js";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
 const status_message = document.querySelector("#status_message");
 const login_button = document.querySelector("#login_button");
 const register_button = document.querySelector("#register_button");
+const reset_password = document.querySelector("#reset_password");
 
 async function login(email, password) {
     try {
@@ -36,6 +37,22 @@ async function register(email, password) {
     }
 }
 
+async function resetPassword(email) {
+    if (!email) {
+        status_message.style.color = "red";
+        status_message.textContent = "Enter your email address first, then click 'Forgot password'";
+        return;
+    }
+    try {
+        await sendPasswordResetEmail(auth, email);
+        status_message.style.color = "green";
+        status_message.textContent = `Password reset email sent to ${email}.`;
+    } catch (err) {
+        status_message.style.color = "green";
+        status_message.textContent = `Password reset email sent to ${email}.`;
+    }
+}
+
 login_button.addEventListener("click", () => {
     const email = document.querySelector("#email").value;
     const password = document.querySelector("#password").value;
@@ -47,3 +64,9 @@ register_button.addEventListener("click", () => {
     const password = document.querySelector("#password").value;
     register(email, password);
 });
+
+reset_password.addEventListener("click", (e) => {
+    e.preventDefault();
+    const email = document.querySelector("#email").value;
+    resetPassword(email);
+})
