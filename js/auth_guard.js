@@ -8,7 +8,7 @@ const log_out = document.querySelector("#log_out");
 export function guardPage() {
     onAuthStateChanged(auth, (user) => {
         if (!user) {
-            window.location.href = "/index.html";
+            window.location.href = "../..";
         } else {
             if (home) {
                 home.style.display = "block";
