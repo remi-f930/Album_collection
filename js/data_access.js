@@ -14,7 +14,7 @@ export async function addAlbum(album, type) {
     }
     const user = auth.currentUser;
     if (!user) {
-        window.location.href = "/index.html"
+        window.location.href = "../index.html"
         return;
     }
     if (!status[type]) {
