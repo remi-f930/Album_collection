@@ -35,6 +35,10 @@ async function getTitles(albumId) {
         const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/album/${albumId}/tracks`);
         const data = await response.json();
         if (!response.ok) {
+            if(response.status == 429) {
+                const title_list = document.querySelector(`#title_list_${album.id}`);
+                title_list.textContent = `Error 429, retry in ${data.retryAfter} seconds`
+            }
             console.error("API error : ", data.error);
             return null;
         }
@@ -66,7 +70,7 @@ async function showAlbums(albums) {
             </a>
             <details class="album_aside">
                 <summary>${album.total_tracks} tracks</summary>
-                <li id="title_list_${album.id}">API Error</li>
+                <li id="title_list_${album.id}"></li>
             </details>
             <p>${album.name}</p>
             <p class="album_artist">${album.artists[0].name}</p>
