@@ -10,18 +10,22 @@
     <script type="module" src="../js/data_access.js" defer></script>
     <script type="module" src="../js/auth_guard.js" defer></script>
     <script type="module" src="../js/spotify_access.js" defer></script>
+    <script type="module" src="../js/collection.js" defer></script>
     <link rel="icon" type="image/png" sizes="32x32" href="../img/icon.png">
     <title>Album collection</title>
 </head>
 
 <body id="home">
     <nav>
-        <a href="../html/home.html"><img src="../img/vinyls.png" alt="collection" width="32px"></a>
+        <button id="collection_button"><img id="collection_icon" src="../img/vinyls.png" alt="collection" width="32px"></button>
         <input id="album_input" type="text" placeholder="Searched album" maxlength="50"></input>
         <button id="log_out"><img src="../img/log_out.png" alt="log out" width="32px"></button>
     </nav>
     
     <div id="album_list"></div>
+
+    <div id="album_collection"></div>
+    
 </body>
 
 </html>

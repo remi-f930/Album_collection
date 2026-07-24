@@ -1,5 +1,6 @@
 import { getFirestore, collection, addDoc, getDocs, setDoc, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 import { auth, db } from "./firebase_config.js";
+import { getTitles, formatDuration } from "./spotify_access.js";
 
 const cd_button = document.querySelectorAll(".cd");
 
@@ -23,12 +24,24 @@ export async function addAlbum(album, type) {
             if (date.length > 4) {
                 date = `${date[0]}` + `${date[1]}` + `${date[2]}` + `${date[3]}`;
             }
+            const titles = await getTitles(album.id);
+            let title_data = [];
+            titles.forEach(title => {
+                title_data.push({
+                    name: title.name,
+                    number: title.track_number,
+                    url: title.external_urls.spotify,
+                    duration: formatDuration(Number(title.duration_ms))
+                })
+            });
             await setDoc(albumRef, {
+                id: album.id,
                 image: album.images[0].url,
                 name: album.name,
                 artist: album.artists[0].name,
                 releaseDate: date,
-                spotifyUrl: album.external_urls.spotify
+                spotifyUrl: album.external_urls.spotify,
+                titles: title_data
             });
             message(`${album.name} successfully added to your collection in ${type}`);
             return 1;
@@ -55,7 +68,7 @@ export async function addAlbum(album, type) {
     }
 }
 
-function message(msg) {
+export function message(msg) {
     const dialog = document.createElement("dialog");
     dialog.innerHTML = `
         <p>${msg}</p>

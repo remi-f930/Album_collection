@@ -3,7 +3,7 @@ import { attachAddButton, addAlbum, checkAlbum } from "./data_access.js";
 const album_input = document.querySelector("#album_input");
 const album_list = document.querySelector("#album_list");
 
-function formatDuration(ms) {
+export function formatDuration(ms) {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000).toString().padStart(2, "0");
     return `${minutes}:${seconds}`;
@@ -29,7 +29,7 @@ async function getAlbum(album) {
     }
 }
 
-async function getTitles(albumId) {
+export async function getTitles(albumId) {
     if (!albumId) return null;
     try {
         const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/album/${albumId}/tracks`);

@@ -233,7 +233,6 @@ button:active {
     color: #ff6b35;
 }
 
-
 .album_aside li {
     list-style: none;
     margin: 8px 0 0;
@@ -342,15 +341,6 @@ nav {
     margin-bottom: 12px;
 }
 
-nav h1 {
-    margin: 0;
-    text-decoration: none;
-    color: #ff6b35;
-    font-family: 'Franklin Gothic Medium';
-    margin-right: 8px;
-    font-size: large;
-}
-
 dialog:open {
     display: flex;
     position: fixed;
@@ -378,9 +368,217 @@ dialog:open {
     right: 0;
 }
 
-#log_out {
+#log_out,
+#collection_button {
     background-color: rgba(0, 0, 0, 0);
     padding: 0;
+}
+
+#collection_icon {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+#album_collection {
+    display: flex;
+    flex-direction: column;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+}
+
+.empty_collection {
+    text-align: center;
+    color: #8a7a70;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    margin-top: 64px;
+}
+
+.collection_row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 8px;
+    border-bottom: 1px solid #2a1d17;
+    transition: background-color 0.15s ease;
+}
+
+.collection_row:hover {
+    background-color: #201712;
+}
+
+.row_cover {
+    display: block;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+}
+
+.row_cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+.row_info {
+    min-width: 0;
+}
+
+.row_title {
+    font-family: 'Fraunces', serif;
+    font-size: 0.95rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.row_meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    color: #8a7a70;
+    margin: 2px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.type_badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.type_cd {
+    background-color: #ff6b35;
+    color: #1a1210;
+}
+
+.type_vinyl {
+    background-color: #f7c548;
+    color: #1a1210;
+}
+
+.row_tracks summary {
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: #f7c548;
+    list-style: none;
+    white-space: nowrap;
+}
+
+.row_tracks summary::-webkit-details-marker {
+    display: none;
+}
+
+.row_tracks summary::before {
+    content: "▸ ";
+}
+
+.row_tracks[open] summary::before {
+    content: "▾ ";
+}
+
+.row_tracks[open] summary {
+    color: #ff6b35;
+}
+
+.row_tracklist {
+    grid-column: 1 / -1;
+    margin-top: 10px;
+    padding: 10px 12px;
+    background-color: #17110d;
+    border-radius: 6px;
+    max-height: 260px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ff6b35 #17110d;
+}
+
+.row_tracklist::-webkit-scrollbar {
+    width: 6px;
+}
+
+.row_tracklist::-webkit-scrollbar-track {
+    background: #17110d;
+}
+
+.row_tracklist::-webkit-scrollbar-thumb {
+    background-color: #ff6b35;
+    border-radius: 6px;
+}
+
+.row_tracklist div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: #c9b8ae;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.delete_button {
+    background-color: transparent;
+    border: 1px solid #4a1a12;
+    color: #ff7a5c;
+    margin: 0;
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+}
+
+.delete_button:hover {
+    background-color: #4a1a12;
+    border-color: #ff6b35;
+    transform: scale(0.97);
+}
+
+@media screen and (max-width: 600px) {
+    .collection_row {
+        grid-template-columns: 48px 1fr;
+        grid-template-areas:
+            "cover info"
+            "cover badge"
+            "tracks tracks"
+            "delete delete";
+        row-gap: 6px;
+    }
+
+    .row_cover {
+        grid-area: cover;
+        width: 48px;
+        height: 48px;
+    }
+
+    .row_info {
+        grid-area: info;
+    }
+
+    .type_badge {
+        grid-area: badge;
+        justify-self: start;
+    }
+
+    .row_tracks {
+        grid-area: tracks;
+    }
+
+    .delete_button {
+        grid-area: delete;
+    }
 }
 
 @media screen and (max-width:1000px) {
