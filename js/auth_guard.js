@@ -8,7 +8,7 @@ const log_out = document.querySelector("#log_out");
 export function guardPage() {
     onAuthStateChanged(auth, (user) => {
         if (!user) {
-            window.location.href = "https://remi-f930.github.io/Album_collection/";
+            window.location.href = "../index.html";
         } else {
             if (home) {
                 home.style.display = "block";
