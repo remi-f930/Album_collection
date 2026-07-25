@@ -33,15 +33,38 @@ https://remi-f930.github.io/Album_collection/
 ```bash
    git clone https://github.com/remi-f930/Album_collection.git
 ```
-2. Set up a [Firebase project](https://console.firebase.google.com) and update `js/firebase_config.js` with your config
-3. change the Spotify proxy configuration (see `spotify-proxy/src/index.js`) like the `"Access-Control-Allow-Origin" : `
-4. Deploy the Spotify proxy Worker with your own Spotify API credentials
+2. Set up a [Firebase project](https://console.firebase.google.com):
+
+   - Enable Authentication (Email/Password) and Firestore
+   - Copy your config into `js/firebase_config.js`
+   - Add these Firestore rules:
+```
+   rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /users/{userId}/{type}/{albumId} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+      }
+    }
+```
+3. Create a [Spotify app](https://developer.spotify.com/dashboard) to get a Client ID and Secret
+
+4. Deploy your own Spotify proxy Worker
+
 ```bash
    cd spotify-proxy
    npm install
+   wrangler secret put SPOTIFY_CLIENT_ID
+   wrangler secret put SPOTIFY_CLIENT_SECRET
    wrangler deploy
 ```
-5. Serve the project locally (e.g. VS Code Live Server)
+
+5. Update `spotify_access.js` and `data_access.js` with your deployed Worker URL
+
+6. In `spotify-proxy/src/index.js`, set `Access-Control-Allow-Origin` to match wherever you'll host/test the app (e.g. `http://127.0.0.1:8080` for local testing)
+
+7. Serve the project locally
 ```bash
    npx live-server
 ```
