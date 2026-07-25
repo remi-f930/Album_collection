@@ -26,6 +26,9 @@ https://remi-f930.github.io/Album_collection/
 
 ## Running locally
 
+>[!CAUTION]
+>### This project relies on a Firebase project and a Spotify proxy Worker with private credentials. Running it fully locally requires setting up your own Firebase project, Spotify app, and Cloudflare Worker as well as possessing a premium Spotify account - see the source code for the required configuration points
+
 1. Clone the repo
 ```bash
    git clone https://github.com/remi-f930/Album_collection.git
