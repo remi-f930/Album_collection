@@ -1,8 +1,12 @@
-# 🎵 Album Collection
+# ![Album Collection logo](./img/icon.png) Album Collection
 
 Track your record collection — search for albums on Spotify and add the ones you own (or want) to your personal collection, sorted by CD or Vinyl.
 
 **[Try it live →](https://remi-f930.github.io/Album_collection/)**
+
+```https 
+https://remi-f930.github.io/Album_collection/
+```
 
 ![Album Collection screenshot](./screenshot.png)
 
@@ -19,10 +23,6 @@ Track your record collection — search for albums on Spotify and add the ones y
 - **Auth & Database**: Firebase Authentication, Firestore
 - **API Proxy**: Cloudflare Workers (Wrangler)
 - **Music Data**: Spotify Web API
-
-## Give it a try 
-
-https://remi-f930.github.io/Album_collection
 
 ## Running locally
 
