@@ -7,6 +7,7 @@ const album_list = document.querySelector("#album_list");
 const collection_icon = document.querySelector("#collection_icon");
 const album_input = document.querySelector("#album_input");
 const album_collection = document.querySelector("#album_collection");
+const load_more = document.querySelector("#load_more_button");
 
 let collection_mode = 0;
 
@@ -17,6 +18,7 @@ collection_button.addEventListener("click", async () => {
         collection_icon.src = "../img/search.png";
         album_list.style.display = "none";
         album_input.style.display = "none";
+        load_more.style.display = "none";
         const user_collection = await getCollection();
         showCollection();
         album_collection.style.display = "block";
@@ -26,6 +28,7 @@ collection_button.addEventListener("click", async () => {
         collection_icon.src = "../img/vinyls.png";
         album_list.style.display = "grid";
         album_input.style.display = "block";
+        load_more.style.display = "block";
         album_collection.style.display = "none";
     }
 })
