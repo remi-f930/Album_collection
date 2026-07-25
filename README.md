@@ -31,8 +31,10 @@ https://remi-f930.github.io/Album_collection/
    git clone https://github.com/remi-f930/Album_collection.git
 ```
 2. Set up a [Firebase project](https://console.firebase.google.com) and update `js/firebase_config.js` with your config
-3. Deploy the Spotify proxy Worker (see `spotify-proxy/`) with your own Spotify API credentials
+3. change the Spotify proxy configuration (see `spotify-proxy/src/index.js`) like the `"Access-Control-Allow-Origin" : `
+4. Deploy the Spotify proxy Worker with your own Spotify API credentials
 ```bash
-  wrangler deploy
+   cd spotify-proxy
+   wrangler deploy
 ```
-4. Serve the project locally (e.g. VS Code Live Server)
+5. Serve the project locally (e.g. VS Code Live Server)
