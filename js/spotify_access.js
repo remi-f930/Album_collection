@@ -2,6 +2,10 @@ import { attachAddButton, addAlbum, checkAlbum } from "./data_access.js";
 
 const album_input = document.querySelector("#album_input");
 const album_list = document.querySelector("#album_list");
+const load_more_button = document.querySelector("#load_more_button");
+
+let currentQuery = "";
+let currentOffset = 0;
 
 export function formatDuration(ms) {
     const minutes = Math.floor(ms / 60000);
@@ -9,13 +13,13 @@ export function formatDuration(ms) {
     return `${minutes}:${seconds}`;
 }
 
-async function getAlbum(album) {
+async function getAlbum(album, offset = 0) {
     album = album.trim().toLowerCase();
 
     if (!album) return null;
 
     try {
-        const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/?q=${encodeURIComponent(album)}`);
+        const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/?q=${encodeURIComponent(album)}&offset=${offset}`);
         const data = await response.json();
         if (!response.ok) {
             console.error("API error : ", data.error);
@@ -35,10 +39,6 @@ export async function getTitles(albumId) {
         const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/album/${albumId}/tracks`);
         const data = await response.json();
         if (!response.ok) {
-            if (response.status == 429) {
-                const title_list = document.querySelector(`#title_list_${album.id}`);
-                title_list.textContent = `Error 429, retry in ${data.retryAfter} seconds`
-            }
             console.error("API error : ", data.error);
             return null;
         }
@@ -50,12 +50,19 @@ export async function getTitles(albumId) {
     }
 }
 
-async function showAlbums(albums) {
-    album_list.innerHTML = "";
+async function showAlbums(albums, append = false) {
+    if (!append) {
+        album_list.innerHTML = "";
+    }
+
     if (!albums || albums.length === 0) {
-        album_list.innerHTML = "<p>Aucun résultat.</p>";
+        if (!append) {
+            album_list.innerHTML = "<p>Aucun résultat.</p>";
+        }
+        load_more_button.style.display = "none";
         return;
     }
+
     for (const album of albums) {
         let date = album.release_date;
         if (date.length > 4) {
@@ -103,6 +110,7 @@ async function showAlbums(albums) {
             }
         });
     }
+    load_more_button.style.display = albums.length === 10 ? "block" : "none";
 }
 
 function showTitles(titles, albumId) {
@@ -112,23 +120,34 @@ function showTitles(titles, albumId) {
     titles.forEach(title => {
         const item = document.createElement("div");
         item.innerHTML = `
-            <a href="${title.external_urls.spotify}" target="NULL_">
+            <a href="${title.external_urls.spotify}" target="_blank" rel="noopener noreferrer">
                 <span class="track_name">${title.track_number}. ${title.name}</span>
                 <span class="track_duration">${formatDuration(title.duration_ms)}</span>
-            </a>
-        `;
+            </a> `;
         li.appendChild(item);
     });
 }
 
 let timeoutId;
-if (album_input) {
-    album_input.addEventListener("keyup", () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(async () => {
-            const album = album_input.value;
-            const albums = await getAlbum(album);
-            showAlbums(albums);
-        }, 400);
-    });
-}
+
+album_input.addEventListener("keyup", () => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(async () => {
+        currentQuery = album_input.value;
+        currentOffset = 0;
+        const albums = await getAlbum(currentQuery, currentOffset);
+        showAlbums(albums, false);
+    }, 400);
+});
+
+load_more_button.addEventListener("click", async () => {
+    currentOffset += 10;
+    load_more_button.textContent = "Loading...";
+    load_more_button.disabled = true;
+
+    const albums = await getAlbum(currentQuery, currentOffset);
+    showAlbums(albums, true);
+
+    load_more_button.textContent = "Load more";
+    load_more_button.disabled = false;
+});

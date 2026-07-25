@@ -558,6 +558,30 @@ dialog:open {
     color: #ff6b35;
 }
 
+#load_more_button {
+    display: none;
+    width: calc(100% - 48px);
+    margin: 0 24px 32px;
+    background-color: #251b17;
+    border: 1px solid #3a2a20;
+    color: #f7c548;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 12px;
+}
+
+#load_more_button:hover {
+    border-color: #ff6b35;
+    color: #ff6b35;
+}
+
+#load_more_button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 @media screen and (max-width: 600px) {
     .collection_row {
         grid-template-columns: 48px 1fr;
