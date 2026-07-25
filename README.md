@@ -1,0 +1,38 @@
+# 🎵 Album Collection
+
+Track your record collection — search for albums on Spotify and add the ones you own (or want) to your personal collection, sorted by CD or Vinyl.
+
+**[Try it live →](https://remi-f930.github.io/Album_collection/)**
+
+![Album Collection screenshot](./screenshot.png)
+
+## Features
+
+- 🔍 Search any album available on Spotify
+- 💿 Add albums to your collection as CD or Vinyl
+- 🎧 Browse full tracklists with durations
+- 🔐 Secure login with email verification
+
+## Tech Stack
+
+- **Frontend**: JavaScript, HTML, CSS
+- **Auth & Database**: Firebase Authentication, Firestore
+- **API Proxy**: Cloudflare Workers (Wrangler)
+- **Music Data**: Spotify Web API
+
+## Give it a try 
+
+https://remi-f930.github.io/Album_collection
+
+## Running locally
+
+1. Clone the repo
+```bash
+   git clone https://github.com/remi-f930/Album_collection.git
+```
+2. Set up a [Firebase project](https://console.firebase.google.com) and update `js/firebase_config.js` with your config
+3. Deploy the Spotify proxy Worker (see `spotify-proxy/`) with your own Spotify API credentials
+```bash
+  wrangler deploy
+```
+4. Serve the project locally (e.g. VS Code Live Server)
