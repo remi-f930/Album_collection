@@ -28,7 +28,7 @@ collection_button.addEventListener("click", async () => {
         collection_icon.src = "../img/vinyls.png";
         album_list.style.display = "grid";
         album_input.style.display = "block";
-        if (!album_collection.innerHTML == "") {
+        if (!album_list.innerHTML == "") {
             load_more.style.display = "block";
         }
         album_collection.style.display = "none";
