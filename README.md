@@ -8,14 +8,13 @@ Track your record collection — search for albums on Spotify and add the ones y
 https://remi-f930.github.io/Album_collection/
 ```
 
-![Album Collection screenshot](./screenshot.png)
-
 ## Features
 
 - 🔍 Search any album available on Spotify
 - 💿 Add albums to your collection as CD or Vinyl
 - 🎧 Browse full tracklists with durations
 - 🔐 Secure login with email verification
+- 🖥️📱 Supports every devices though this project was mainly made for smartphone and PC
 
 ## Tech Stack
 
