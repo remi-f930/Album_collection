@@ -35,6 +35,10 @@ https://remi-f930.github.io/Album_collection/
 4. Deploy the Spotify proxy Worker with your own Spotify API credentials
 ```bash
    cd spotify-proxy
+   npm install
    wrangler deploy
 ```
 5. Serve the project locally (e.g. VS Code Live Server)
+```bash
+   npx live-server
+```
