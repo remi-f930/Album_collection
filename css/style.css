@@ -134,6 +134,15 @@ button:active {
     font-size: 1rem;
 }
 
+#collection_input {
+    display: none;
+    width: 100%;
+    max-width: 400px;
+    margin: 0;
+    padding: 12px 16px;
+    font-size: 1rem;
+}
+
 #album_list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

@@ -6,6 +6,7 @@ const collection_button = document.querySelector("#collection_button");
 const album_list = document.querySelector("#album_list");
 const collection_icon = document.querySelector("#collection_icon");
 const album_input = document.querySelector("#album_input");
+const collection_input = document.querySelector("#collection_input");
 const album_collection = document.querySelector("#album_collection");
 const load_more = document.querySelector("#load_more_button");
 
@@ -18,6 +19,7 @@ collection_button.addEventListener("click", async () => {
         collection_icon.src = "../img/search.png";
         album_list.style.display = "none";
         album_input.style.display = "none";
+        collection_input.style.display = "block";
         load_more.style.display = "none";
         const user_collection = await getCollection();
         showCollection();
@@ -28,6 +30,7 @@ collection_button.addEventListener("click", async () => {
         collection_icon.src = "../img/vinyls.png";
         album_list.style.display = "grid";
         album_input.style.display = "block";
+        collection_input.style.display = "none";
         if (!album_list.innerHTML == "") {
             load_more.style.display = "block";
         }
@@ -135,3 +138,17 @@ async function deleteAlbum(album, type) {
         return 1;
     }
 }
+
+collection_input.addEventListener("keyup", () => {
+    const collection = document.querySelectorAll(".collection_row");
+    const search = collection_input.value.toLowerCase().trim();
+    collection.forEach(album => {
+        const text = album.textContent.toLowerCase().trim();
+        if (text.includes(search)) {
+            album.style.display = "";
+        }
+        else {
+            album.style.display = "none";
+        }
+    })
+})
