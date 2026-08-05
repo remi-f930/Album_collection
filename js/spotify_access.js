@@ -1,5 +1,4 @@
 import { attachAddButton, addAlbum, checkAlbum } from "./data_access.js";
-import { auth } from "./firebase_config.js";
 
 const album_input = document.querySelector("#album_input");
 const album_list = document.querySelector("#album_list");
@@ -20,8 +19,7 @@ async function getAlbum(album, offset = 0) {
     if (!album) return null;
 
     try {
-        const idToken = await auth.currentUser.getIdToken();
-        const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/?q=${encodeURIComponent(album)}&offset=${offset}`, { headers: { Authorization: `Bearer ${idToken}` } });
+        const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/?q=${encodeURIComponent(album)}&offset=${offset}`);
         const data = await response.json();
         if (!response.ok) {
             console.error("API error : ", data.error);
@@ -38,8 +36,7 @@ async function getAlbum(album, offset = 0) {
 export async function getTitles(albumId) {
     if (!albumId) return null;
     try {
-        const idToken = await auth.currentUser.getIdToken();
-        const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/album/${albumId}/tracks`, { headers: { Authorization: `Bearer ${idToken}` } });
+        const response = await fetch(`https://spotify-proxy.album-collection.workers.dev/album/${albumId}/tracks`);
         const data = await response.json();
         if (!response.ok) {
             console.error("API error : ", data.error);
