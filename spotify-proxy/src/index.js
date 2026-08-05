@@ -38,15 +38,18 @@ async function getSpotifyToken(clientId, clientSecret) {
 }
 
 function jsonResponse(body, status = 200) {
-    return new Response(JSON.stringify(body), {
-        status,
-        headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "https://remi-f930.github.io",
-            "Access-Control-Allow-Methods": "GET, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization"
-        }
-    });
+    const headers = {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "https://remi-f930.github.io",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+    };
+
+    if (status === 204 || status === 205 || status === 304) {
+        return new Response(null, { status, headers });
+    }
+
+    return new Response(JSON.stringify(body), { status, headers });
 }
 
 async function appelerSpotify(url, token) {

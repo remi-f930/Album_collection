@@ -60,7 +60,7 @@ async function showAlbums(albums, append = false) {
 
     if (!albums || albums.length === 0) {
         if (!append) {
-            album_list.innerHTML = "<p>Aucun résultat.</p>";
+            album_list.innerHTML = "<p>No results...</p>";
         }
         load_more_button.style.display = "none";
         return;
